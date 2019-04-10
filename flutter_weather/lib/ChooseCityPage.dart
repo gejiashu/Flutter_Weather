@@ -9,7 +9,6 @@ import 'package:flutter_weather/model/city_entity.dart';
 class ChooseCityPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return ChooseCityPageState();
   }
 }
@@ -99,11 +98,9 @@ class ChooseCityPageState extends State<ChooseCityPage> {
       return ListView.builder(
           shrinkWrap: true,
           itemBuilder: (BuildContext context, int index) {
-
-            if(index ==0){
+            if (index == 0) {
               return HistoryCityHeader();
             }
-
             return InkWell(
               child: Container(
                   height: 56,
@@ -114,21 +111,22 @@ class ChooseCityPageState extends State<ChooseCityPage> {
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        cityData.keys.toList()[index-1].cityName,
+                        cityData.keys.toList()[index - 1].cityName,
                         style:
                             TextStyle(color: $Colors.blueParis, fontSize: 18),
                       ))),
               onTap: () {
-                final cityEntity = cityData.keys.toList()[index-1];
+                final cityEntity = cityData.keys.toList()[index - 1];
                 final values = cityData[cityEntity];
                 Navigator.of(context)
-                    .pushNamed("/router/choose_city", arguments: values).then((value){
-                      Navigator.pop(context,value);
+                    .pushNamed("/router/choose_city", arguments: values)
+                    .then((value) {
+                  Navigator.pop(context, value);
                 });
               },
             );
           },
-          itemCount: cityData.length+1);
+          itemCount: cityData.length + 1);
     }
   }
 }

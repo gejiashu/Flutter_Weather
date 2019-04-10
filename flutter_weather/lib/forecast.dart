@@ -5,7 +5,7 @@ import 'package:flutter_weather/model/weather_data_entity.dart';
 class Forecast extends StatelessWidget {
   final WeatherDataEntity data;
 
-  Forecast(this.data);
+  Forecast(Key key,this.data):super(key:key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,6 @@ class Forecast extends StatelessWidget {
       return Container();
     }
     return Container(
-        color: Color(0xFFB0B1C5),
         child: Container(
           child: new ForecastPager(data),
           decoration: BoxDecoration(

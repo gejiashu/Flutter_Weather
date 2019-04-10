@@ -21,6 +21,7 @@ class ForecastPagerState extends State<ForecastPager> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
@@ -55,18 +56,19 @@ class ForecastPagerState extends State<ForecastPager> {
           ),
           padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
         ),
-        Expanded(
-            child: PageView.builder(
+        Container(height: 390,child:
+        PageView.builder(
           itemBuilder: (BuildContext context, int index) =>
               ForecastItem(widget.data.data.forecast[index]),
           itemCount: 5,
           scrollDirection: Axis.horizontal,
           onPageChanged: (int page) => {
-                setState(() {
-                  currentPage = page;
-                })
-              },
-        ))
+          setState(() {
+            currentPage = page;
+          })
+          },
+        )
+          )
       ],
     );
   }
