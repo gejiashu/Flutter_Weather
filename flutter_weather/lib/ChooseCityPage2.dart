@@ -3,9 +3,9 @@ import 'package:flutter_weather/Res.dart';
 import 'package:flutter_weather/model/city_entity.dart';
 
 class ChooseCityPage2 extends StatelessWidget {
-  List<CityEntity> data;
+  final List<CityEntity> data;
 
-  ChooseCityPage2(this.data);
+  const ChooseCityPage2(this.data);
 
   @override
   Widget build(BuildContext context) {

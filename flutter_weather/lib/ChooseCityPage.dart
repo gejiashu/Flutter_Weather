@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -14,20 +15,26 @@ class ChooseCityPage extends StatefulWidget {
 }
 
 class ChooseCityPageState extends State<ChooseCityPage> {
-  Map<CityEntity, List<CityEntity>> cityData;
+
+  Future<Map<CityEntity,List<CityEntity>>> _future;
 
   @override
   void initState() {
     super.initState();
+    _future = getData();
+  }
+
+  getData() {
+    final completer = Completer<Map<CityEntity,List<CityEntity>>>();
     final result =
-        DefaultAssetBundle.of(context).loadString("assets/data/city.json");
+    DefaultAssetBundle.of(context).loadString("assets/data/city.json");
     result.then((value) {
       List<dynamic> data = json.decode(value);
       final cityList = CityList.fromJson(data);
-      setState(() {
-        cityData = buildData(cityList.data);
-      });
+      Map<CityEntity, List<CityEntity>> cityData = buildData(cityList.data);
+      completer.complete(cityData);
     });
+    return completer.future;
   }
 
   Map<CityEntity, List<CityEntity>> buildData(List<CityEntity> data) {
@@ -80,53 +87,55 @@ class ChooseCityPageState extends State<ChooseCityPage> {
             ),
           ),
         ),
-        body: buildBody(),
+        body: FutureBuilder<Map<CityEntity,List<CityEntity>>>(future:_future,builder: (context,snapshot){
+          switch(snapshot.connectionState){
+
+            case ConnectionState.done:
+              return ListView.builder(
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index == 0) {
+                      return HistoryCityHeader();
+                    }
+                    return InkWell(
+                      child: Container(
+                          height: 56,
+                          decoration: BoxDecoration(
+                              border:
+                              Border(bottom: BorderSide(color: Colors.black12))),
+                          padding: EdgeInsets.only(left: 12),
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                snapshot.data.keys.toList()[index - 1].cityName,
+                                style:
+                                TextStyle(color: $Colors.blueParis, fontSize: 18),
+                              ))),
+                      onTap: () {
+                        final cityEntity = snapshot.data.keys.toList()[index - 1];
+                        final values = snapshot.data[cityEntity];
+                        Navigator.of(context)
+                            .pushNamed("/router/choose_city", arguments: values)
+                            .then((value) {
+                          Navigator.pop(context, value);
+                        });
+                      },
+                    );
+                  },
+                  itemCount: snapshot.data.length + 1);
+              break;
+            default:
+              return Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation($Colors.blueParis),
+                  ));
+
+          }
+        })
       ),
       onWillPop: () {
         Navigator.of(context).pop();
       },
     );
-  }
-
-  Widget buildBody() {
-    if (cityData == null) {
-      return Center(
-          child: CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation($Colors.blueParis),
-      ));
-    } else {
-      return ListView.builder(
-          shrinkWrap: true,
-          itemBuilder: (BuildContext context, int index) {
-            if (index == 0) {
-              return HistoryCityHeader();
-            }
-            return InkWell(
-              child: Container(
-                  height: 56,
-                  decoration: BoxDecoration(
-                      border:
-                          Border(bottom: BorderSide(color: Colors.black12))),
-                  padding: EdgeInsets.only(left: 12),
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        cityData.keys.toList()[index - 1].cityName,
-                        style:
-                            TextStyle(color: $Colors.blueParis, fontSize: 18),
-                      ))),
-              onTap: () {
-                final cityEntity = cityData.keys.toList()[index - 1];
-                final values = cityData[cityEntity];
-                Navigator.of(context)
-                    .pushNamed("/router/choose_city", arguments: values)
-                    .then((value) {
-                  Navigator.pop(context, value);
-                });
-              },
-            );
-          },
-          itemCount: cityData.length + 1);
-    }
   }
 }

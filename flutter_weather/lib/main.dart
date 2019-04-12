@@ -19,10 +19,9 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (RouteSettings settings) {
         if (settings.name == "/router/choose_province") {
           return MaterialPageRoute(
-              settings: settings, builder: (_) => new ChooseCityPage());
+               builder: (_) => new ChooseCityPage());
         } else if (settings.name == "/router/choose_city") {
           return MaterialPageRoute(
-              settings: settings,
               builder: (_) => new ChooseCityPage2(settings.arguments));
         }
       },
