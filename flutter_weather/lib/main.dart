@@ -4,6 +4,8 @@ import 'package:flutter_weather/ChooseCityPage2.dart';
 import 'package:flutter_weather/HistoryManager.dart';
 import 'package:flutter_weather/home.dart';
 
+import 'WeatherTrendPage.dart';
+
 void main() {
   return runApp(MyApp());
 }
@@ -23,6 +25,10 @@ class MyApp extends StatelessWidget {
         } else if (settings.name == "/router/choose_city") {
           return MaterialPageRoute(
               builder: (_) => new ChooseCityPage2(settings.arguments));
+        } else if(settings.name == "/router/weather_trend"){
+          return MaterialPageRoute(builder:(_){
+              return new WeatherTrendPage(settings.arguments);
+          });
         }
       },
       home: HomePage(),

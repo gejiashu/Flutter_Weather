@@ -30,7 +30,10 @@ class Weather extends StatelessWidget {
             Text(
               data.data.forecast[0].notice,
               style: TextStyle(color: $Colors.blueParis, fontSize: 18),
-            )
+            ),
+            GestureDetector(child: Text("天气走势",style: TextStyle(color:$Colors.blueParis,fontSize: 18,decoration: TextDecoration.underline)),onTap: (){
+              Navigator.of(context).pushNamed("/router/weather_trend",arguments: data);
+            })
           ],
         ));
   }
